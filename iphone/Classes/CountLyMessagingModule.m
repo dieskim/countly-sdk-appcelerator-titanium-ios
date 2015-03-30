@@ -9,6 +9,7 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
+#import "TiApp.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
 #include <UIKit/UIKit.h>
@@ -77,11 +78,93 @@
     TiThreadPerformOnMainThread(^{[[Countly sharedInstance] start:apikey withHost:apiHost];}, NO);
 }
 
+-(void)startMessaging:(id)args
+{
+    ENSURE_ARG_COUNT(args, 2);
+    NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
+    NSString* apiHost = [TiUtils stringValue:[args objectAtIndex:1]];
+    
+    NSDictionary* launchOptions = [[TiApp app] launchOptions];
+    
+    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
+    
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        
+        UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings
+            settingsForTypes:	UIUserNotificationTypeAlert |
+                                UIUserNotificationTypeBadge |
+                                UIUserNotificationTypeSound
+            categories:[[Countly sharedInstance] countlyNotificationCategories]];
+        
+        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+        
+    } else {
+        
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+        
+    }
+
+}
+
+-(void)startMessagingTest:(id)args
+{
+    ENSURE_ARG_COUNT(args, 2);
+    NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
+    NSString* apiHost = [TiUtils stringValue:[args objectAtIndex:1]];
+    
+    NSDictionary* launchOptions = [[TiApp app] launchOptions];
+    
+    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
+    
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        
+        UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings
+                                                            settingsForTypes:	UIUserNotificationTypeAlert |
+                                                            UIUserNotificationTypeBadge |
+                                                            UIUserNotificationTypeSound
+                                                            categories:[[Countly sharedInstance] countlyNotificationCategories]];
+        
+        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+        
+    } else {
+        
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+        
+    }
+    
+}
+
 -(void)startOnCloud:(id)args
 {
     ENSURE_ARG_COUNT(args, 1);
     NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
     TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startOnCloudWithAppKey:apikey];}, NO);
+}
+
+-(void)registerDeviceSuccess: (id)args {
+    
+    NSString* deviceTokenString = [TiUtils stringValue:[args objectAtIndex:0]];
+    
+    deviceTokenString = [deviceTokenString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSMutableData *deviceToken= [[NSMutableData alloc] init];
+    unsigned char whole_byte;
+    char byte_chars[3] = {'\0','\0','\0'};
+    int i;
+    for (i=0; i < [deviceTokenString length]/2; i++) {
+        byte_chars[0] = [deviceTokenString characterAtIndex:i*2];
+        byte_chars[1] = [deviceTokenString characterAtIndex:i*2+1];
+        whole_byte = strtol(byte_chars, NULL, 16);
+        [deviceToken appendBytes:&whole_byte length:1];
+    }
+    
+    [[Countly sharedInstance] didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    
+}
+
+-(void)registerDeviceError: (id)args {
+    
+    [[Countly sharedInstance] didFailToRegisterForRemoteNotifications];
+    
 }
 
 - (void)event:(id)args

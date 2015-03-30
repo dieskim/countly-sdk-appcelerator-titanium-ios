@@ -31,4 +31,18 @@ dependencies: \
   /Users/dieskim/Dropbox/BOX_Data/Bible_Apps/app_workspace/Titanium-Countly-Messaging/iphone/sdk/Countly.h \
   /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiHost.h \
   /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/Bridge.h \
-  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiStylesheet.h
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiStylesheet.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiApp.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/KrollBridge.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/XHRBridge.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiRootViewController.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiControllerProtocols.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiViewProxy.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiUIView.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiAnimation.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiPoint.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/ListenerEntry.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/LayoutConstraint.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiGradient.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiRect.h \
+  /Users/dieskim/Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiViewTemplate.h
