@@ -114,7 +114,7 @@
     
     NSDictionary* launchOptions = [[TiApp app] launchOptions];
     
-    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
+    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithTestMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
     
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
         
@@ -156,6 +156,9 @@
         whole_byte = strtol(byte_chars, NULL, 16);
         [deviceToken appendBytes:&whole_byte length:1];
     }
+    
+    NSLog(@"deviceTokenModule: %@", deviceToken);
+    
     
     [[Countly sharedInstance] didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
