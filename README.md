@@ -63,10 +63,10 @@ function registerForPush() {
                         success: deviceTokenSuccess,
                         error: deviceTokenError,
                         callback: receivePush
-});
+	});
 
-// Remove event listener once registered for push notifications
-Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush); 
+	// Remove event listener once registered for push notifications
+	Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush); 
 };
 // END FUNCTION - registerForPush
 
@@ -94,7 +94,7 @@ function deviceTokenSuccess(e) {
 
 	}else{
 
-	Ti.API.log('Already Subscribed to Count.ly Push, wont subscribe again!');
+		Ti.API.log('Already Subscribed to Count.ly Push, wont subscribe again!');
 
 	};
 	// END IF - not subscribed then subscribe	   
@@ -220,9 +220,7 @@ function receivePush(pushMessage) {
 ```
 var segmentation = {device:"iPhone 4S", country:"USA"};
 var eventData = {name: "keySegmentationCountSum", segmentation:segmentation, count: 1, sum: 0.99};
-
 ```
-
 - name (required) : Name of the event to track  
 - _(example - Track clicks on the help button "clickedHelp" )_
 - count (required) : Number to increment the event in the db
@@ -252,7 +250,6 @@ Countly.event(eventData);
 Ti.API.log("Send keySegmentationCountSum Event");
 var eventData = {name: "keySegmentationCountSum", segmentation:segmentation, count: 1, sum: 0.99};
 Countly.event(eventData);
-
 ```
 
 ### Set UserData
@@ -271,7 +268,6 @@ Countly.event(eventData);
 - picturePath - (String) providing local path to user's avatar or profile picture
 - gender - (String) providing user's gender as M for male and F for female
 - byear - (int) providing user's year of birth as integer
-
 ```
 var userData = {	name: "testName",
 username: "testUsername",
@@ -283,7 +279,6 @@ picturePath: "/images/appicon.png",
 gender: "M",
 byear: "1980",
 };
-
 ```
 
 **Set customUserData{} as information about user with custom properties
@@ -304,9 +299,7 @@ var args = {	userData:userData,
 customUserData:customUserData,
 };
 
-
 Countly.userData(args);
-
 ```
 
 ### Metrics Data
