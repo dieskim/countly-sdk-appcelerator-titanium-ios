@@ -70,6 +70,15 @@
 	[super didReceiveMemoryWarning:notification];
 }
 
+
+-(void)setMessagingDeveloperMode: (id)args {
+    
+    [[Countly sharedInstance] setMessagingDeveloperMode];
+    
+    NSLog(@"[INFO] %@ setMessagingDeveloperMode",self);
+    
+}
+
 -(void)start:(id)args
 {
     ENSURE_ARG_COUNT(args, 2);
@@ -84,9 +93,7 @@
     NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
     NSString* apiHost = [TiUtils stringValue:[args objectAtIndex:1]];
     
-    NSDictionary* launchOptions = [[TiApp app] launchOptions];
-    
-    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
+    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithMessagingUsing:apikey withHost:apiHost andOptions:nil];}, NO);
     
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
         
@@ -111,18 +118,16 @@
     ENSURE_ARG_COUNT(args, 2);
     NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
     NSString* apiHost = [TiUtils stringValue:[args objectAtIndex:1]];
-    
-    NSDictionary* launchOptions = [[TiApp app] launchOptions];
-    
-    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithTestMessagingUsing:apikey withHost:apiHost andOptions:launchOptions];}, NO);
+
+    TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startWithTestMessagingUsing:apikey withHost:apiHost andOptions:nil];}, NO);
     
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
         
         UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings
-                                                            settingsForTypes:	UIUserNotificationTypeAlert |
-                                                            UIUserNotificationTypeBadge |
-                                                            UIUserNotificationTypeSound
-                                                            categories:[[Countly sharedInstance] countlyNotificationCategories]];
+            settingsForTypes:	UIUserNotificationTypeAlert |
+                                UIUserNotificationTypeBadge |
+                                UIUserNotificationTypeSound
+            categories:[[Countly sharedInstance] countlyNotificationCategories]];
         
         [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
         
@@ -157,17 +162,43 @@
         [deviceToken appendBytes:&whole_byte length:1];
     }
     
-    NSLog(@"deviceTokenModule: %@", deviceToken);
-    
-    
     [[Countly sharedInstance] didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
+    
+    NSLog(@"deviceTokenModule: %@", deviceToken);
 }
 
 -(void)registerDeviceError: (id)args {
     
     [[Countly sharedInstance] didFailToRegisterForRemoteNotifications];
     
+}
+
+-(void)recordPushOpen: (id)args {
+    
+    // set pushUserInfoDictionary as args passed
+    NSDictionary * pushUserInfoDictionary = [args objectAtIndex:0];
+    
+    //NSLog(@"recordPushOpen - pushUserInfoDictionary: %@", pushUserInfoDictionary);
+    
+    // get userInfoDictionary from pushUserInfoDictionary
+    NSDictionary* userInfoDictionary = [pushUserInfoDictionary objectForKey:@"userInfoDictionary"];
+    
+    [[Countly sharedInstance] recordPushOpenForCountlyDictionary:userInfoDictionary];
+     
+}
+
+-(void)recordPushAction: (id)args {
+    
+    // set pushUserInfoDictionary as args passed
+    NSDictionary * pushUserInfoDictionary = [args objectAtIndex:0];
+    
+    //NSLog(@"recordPushAction - pushUserInfoDictionary: %@", pushUserInfoDictionary);
+    
+    // get userInfoDictionary from pushUserInfoDictionary
+    NSDictionary* userInfoDictionary = [pushUserInfoDictionary objectForKey:@"userInfoDictionary"];
+    
+    [[Countly sharedInstance] recordPushActionForCountlyDictionary:userInfoDictionary];
 }
 
 - (void)event:(id)args
