@@ -11,35 +11,209 @@ Other Countly SDK repositories;
 - [Countly Android SDK (countly-sdk-android)](https://github.com/Countly/countly-sdk-android)
 - [Countly iOS SDK (countly-sdk-ios)](https://github.com/Countly/countly-sdk-ios)
 
+## This Titanium iOS  module is written to make use of Count.ly Messaging Features. 
+## Please note that this Module is under development.
 
 ## Installation
 
-Clone git repo and move to Titanium Modules Folder
+Download the latest zip and copy to the root of your Titanium Application
 ```
-$ git clone https://github.com/euforic/Ti-Count.ly.git
-$ cd Ti-Count.ly
-$ cp count.ly-iphone-0.2.1.zip /Library/Application Support/Titanium/
+count.ly.messaging-iphone-x.x.x.zip
 ```
 
 Register your module with your application by editing `tiapp.xml` and adding your module.
 
 ```
 <modules>
-<module version="0.2.1">count.ly</module>
+<module platform="iphone">count.ly.messaging</module>
 </modules>
 ```
 
 ## Usage
 
-### Start Count.ly
+### START - NO MESSAGING
 
-**Start Tracking**
+**Require the Count.ly Module**
 ```
-var countly = require('count.ly');
-countly.start('APP_KEY','http://API_HOST.com');
+var Countly = require('count.ly.messaging');
 ```
 
-### Record Events
+**Start Count.ly on own server without Messaging**
+```
+Countly.start('APP_KEY','http://YOUR_HOST.com');
+```
+
+**Start Count.ly on cloud without Messaging**
+```
+Countly.startOnCloud('APP_KEY');
+```
+
+### SETUP Count.ly WITH Messaging - Push
+
+**Require the Count.ly Module**
+```
+var Countly = require('count.ly.messaging');
+```
+
+**Set Push Setup functions**
+```
+// START FUNCTION - registerForPush
+function registerForPush() {
+Ti.Network.registerForPushNotifications({
+success: deviceTokenSuccess,
+error: deviceTokenError,
+callback: receivePush
+});
+
+// Remove event listener once registered for push notifications
+Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush); 
+};
+// END FUNCTION - registerForPush
+
+
+// addEventListener to Wait for user settings to be registered before registering for push notifications
+Ti.App.iOS.addEventListener('usernotificationsettings', registerForPush);
+
+// Start Function - deviceTokenSuccess
+function deviceTokenSuccess(e) {
+
+// get Ti.App.Properties - pushSubscribed - to check if already subscribed or not
+var pushSubscribed = Ti.App.Properties.getString('pushSubscribed',false);
+Ti.API.log('pushSubscribed Value: ' + pushSubscribed);	
+
+// START IF - not subscribed then subscribe
+if (pushSubscribed != true){
+
+Ti.API.log("Not Subscribed to Count.ly Push - Subscribe with deviceToken: " + e.deviceToken);
+
+// run Count.ly Register Device for Push
+Countly.registerDeviceSuccess(e.deviceToken);
+
+// Set Ti.App.Properties push_channels
+Ti.App.Properties.setString('pushSubscribed',true); 
+
+}else{
+
+Ti.API.log('Already Subscribed to Count.ly Push, wont subscribe again!');
+
+};
+// END IF - not subscribed then subscribe	   
+
+};
+// End Function - deviceTokenSuccess
+
+// Start Function - deviceTokenError
+function deviceTokenError(e) {
+
+Ti.API.log("Failed to Find Token" + e.error);
+
+// run Count.ly Register registerDeviceError
+Countly.registerDeviceError();
+
+};
+// End Function - deviceTokenError
+
+```
+
+**START Countly with Messaging - DEVELOPMENT TEST**
+```
+Countly.setMessagingDeveloperMode();	// setMessagingDeveloperMode
+Countly.startMessagingTest('YOUR_APP_KEY','http://yourserver.com');
+```
+
+**START Countly with Messaging - PRODUCTION**
+```
+Countly.startMessaging('YOUR_APP_KEY','http://yourserver.com');
+```
+
+**Receive and Process push on Titanium side**
+```
+// START FUNCTION - receivePush for iOS
+function receivePush(pushMessage) {			
+
+// Ti.API.info Raw pushMessage
+Ti.API.info("Received Push:" + JSON.stringify(pushMessage));  
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 													pushMessage EXAMPLE									//
+//																										//
+// 			{"code":0,																					//
+//			"data":{	"alert":"Test Message",															//
+//						"category":"[CLY]_url",															//
+//						"c":{"l":"http://count.ly","i":"551b9d03f593a55e11ea62c0"},						//
+//						"sound":"default",																//
+//						"aps":{"category":"[CLY]_url","sound":"default","alert":"test5"}				//
+//					},																					//
+//			"type":"remote",																			//
+//			"source":{},																				//
+//			"inBackground":true,																		//
+//			"success":true};																			//
+//																										//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// pushData
+var pushData = pushMessage.data;
+
+// set pushUserInfoDictionary
+var pushUserInfoDictionary = {userInfoDictionary: pushMessage.data.c};	
+// run Count.ly record Push Opened	
+Countly.recordPushOpen(pushUserInfoDictionary);	
+
+
+// START IF - Set pushAlertMessage
+if (pushMessage.data.alert){
+
+var pushAlertMessage = pushMessage.data.alert;
+
+};
+// END IF -  Set pushAlertMessage 
+
+
+// START IF - Set PUSH CATEGORY TYPE - check more here - http://resources.count.ly/v1.0/docs/countly-push-for-ios
+if (pushMessage.data.c.l) {
+
+var pushType = "PushToOpenLink";
+var pushLink = pushMessage.data.c.l;
+
+///////////////////////////////////////////////////////////
+// 				SHOW AN LINK ALERT HERE					//
+// 1. Use info 	- pushType
+// 				- pushLink
+//				- pushAlertMessage
+// 2. Once user Takes action log action with
+
+// Count.ly record Push Action	
+// Countly.recordPushAction(pushUserInfoDictionary);	
+
+//////////////////////////////////////////////////////////
+
+} else if (pushMessage.data.c.r) {
+
+var pushType = "PushToReview";
+
+// SHOW AN REVIEW ALERT HERE 
+
+} else if (pushMessage.data.c.u) {
+
+var pushType = "PushToUpdate";
+
+// SHOW AN UPDATE ALERT HERE
+
+} else {
+
+var pushType = "PushNormal";
+
+// SHOW NORMAL ALERT HERE
+}
+// END IF - Set PUSH CATEGORY TYPE
+
+
+};
+// END FUNCTION - receivePush for iOS
+```
+
+### Count.ly Record Events
 
 **Set any of the following Fields in an Object**
 
@@ -150,28 +324,3 @@ console.log('locale',countly.locale);
 console.log('appVersion',countly.appVersion);
 console.log('osVersion',countly.osVersion);
 ```
-
-## License
-
-(The MIT License)
-
-Copyright (c) 2012 Christian Sullivan &lt;cs@euforic.co&gt;
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
