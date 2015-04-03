@@ -201,6 +201,17 @@
     [[Countly sharedInstance] recordPushActionForCountlyDictionary:userInfoDictionary];
 }
 
+-(void)setLocation: (id)args {
+    
+    NSDictionary * params = [args objectAtIndex:0];
+    
+    double latitude = [TiUtils doubleValue:[params objectForKey:@"latitude"]];
+    double longitude = [TiUtils doubleValue:[params objectForKey:@"longitude"]];
+    
+    [[Countly sharedInstance]setLocation:latitude longitude:longitude];
+    
+}
+
 - (void)event:(id)args
 {
     NSDictionary * params = [args objectAtIndex:0];

@@ -161,3 +161,10 @@ function receivePush(pushMessage) {
         
 };
 // END FUNCTION - receivePush for iOS
+
+// Countly Set user location
+// - Takes two strings: latitudeString and longitudeString of 2 digit lengths
+var latitudeString = 12;
+var longitudeString = 10;
+Countly.setLocation(latitudeString,longitudeString);
+

@@ -1,27 +1,43 @@
-# Count.ly Titanium iOS SDK
+# Count.ly Titanium iOS Messaging Module
 
 Countly is an innovative, real-time, open source mobile analytics application. It collects data from mobile phones, and visualizes this information to analyze mobile application usage and end-user behavior. There are two parts of Countly: the server that collects and analyzes data, and mobile SDK that sends this data (for iOS & Android).
+
+Countly:
+
+- [Countly (Countly)](https://count.ly)
 
 Countly Server;
 
 - [Countly Server (countly-server)](https://github.com/Countly/countly-server)
+
+Titanium Countly Messaging Modules
+- [Countly Titanium Android Messaging Module](https://github.com/dieskim/Titanium-Count.ly-Android-Messaging)
+- [Countly Titanium iOS Messaging Module](https://github.com/dieskim/Titanium-Count.ly-Messaging)
 
 Other Countly SDK repositories;
 
 - [Countly Android SDK (countly-sdk-android)](https://github.com/Countly/countly-sdk-android)
 - [Countly iOS SDK (countly-sdk-ios)](https://github.com/Countly/countly-sdk-ios)
 
-## This Titanium iOS  module is written to make use of Count.ly Messaging Features. 
+Countly SDK Guides;
+- [Countly Android Messaging Guide](http://resources.count.ly/v1.0/docs/countly-push-for-android)
+- [Countly iOS Messaging Guide](http://resources.count.ly/v1.0/docs/countly-push-for-ios)
+
+## This Titanium iOS module is written to take use of all the Count.ly functions - including events,userData and Messaging.
+## It is written with functions as close to the Android module as possible to create uniformed functions.
 ## Please note that this Module is under development.
+## Please log issues via github issues
+## Any pull requests and suggestio welcome!
+## Author: Dieskim
+## Development Sponsor: http://Hamsane.com - Friend who loves your way of working - Thanks!
 
 ## Installation
 
-Download the latest zip and copy to the root of your Titanium Application
-```
-count.ly.messaging-iphone-x.x.x.zip
-```
+1. Go to: https://github.com/dieskim/Titanium-Count.ly-Messaging
+2. Download: count.ly-messaging-iphone-x.x.x.zip
+3. Move Zip to root of your Application 
 
-Register your module with your application by editing `tiapp.xml` and adding your module.
+### Register your module with your application by editing `tiapp.xml` and adding your module.
 
 ```
 <modules>
@@ -30,8 +46,6 @@ Register your module with your application by editing `tiapp.xml` and adding you
 ```
 
 ## Usage
-
-### START - NO MESSAGING
 
 **Require the Count.ly Module**
 ```
@@ -173,7 +187,7 @@ function receivePush(pushMessage) {
 	// START IF - Set PUSH CATEGORY TYPE - check more here - http://resources.count.ly/v1.0/docs/countly-push-for-ios
 	if (pushMessage.data.c.l) {
 	
-		var pushType = "PushToOpenLink";
+		var pushType = "hasLink";
 		var pushLink = pushMessage.data.c.l;
 		
 		///////////////////////////////////////////////////////////
@@ -190,19 +204,19 @@ function receivePush(pushMessage) {
 		
 	} else if (pushMessage.data.c.r) {
 		
-		var pushType = "PushToReview";
+		var pushType = "hasReview";
 			
 		// SHOW AN REVIEW ALERT HERE 
 		
 	} else if (pushMessage.data.c.u) {
 		
-		var pushType = "PushToUpdate";
+		var pushType = "hasUpdate";
 			
 		// SHOW AN UPDATE ALERT HERE
 	
 	} else {
 	
-		var pushType = "PushNormal";
+		var pushType = "hasMessage";
 	
 		// SHOW NORMAL ALERT HERE
 		
@@ -211,6 +225,16 @@ function receivePush(pushMessage) {
 
 };
 // END FUNCTION - receivePush for iOS
+```
+
+**Set User Location - Enterprise Only**
+
+```
+// Countly Set user location
+// - Takes two strings: latitudeString and longitudeString of 2 digit lengths
+var latitudeString = 12;
+var longitudeString = 10;
+Countly.setLocation(latitudeString,longitudeString);
 ```
 
 ### Count.ly Record Events
