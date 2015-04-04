@@ -341,3 +341,11 @@ console.log('locale',countly.locale);
 console.log('appVersion',countly.appVersion);
 console.log('osVersion',countly.osVersion);
 ```
+
+## Author
+
+Author: Dieskim
+
+## License
+
+MIT as in License.txt

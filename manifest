@@ -1,8 +1,8 @@
 #appname: Titanium-Countly-Messaging
-#publisher: dieskim
-#url: 
+#publisher: Dieskim
+#url: https://github.com/dieskim/Titanium-Count.ly-Messaging
 #image: appicon.png
 #appid: count.ly.messaging
-#desc: undefined
+#desc: This Titanium iOS module is written to take use of all the Count.ly functions - including events,userData and Messaging.
 #type: module
 #guid: c53eb269-8a7b-45fb-bdb5-6cec14da7adc

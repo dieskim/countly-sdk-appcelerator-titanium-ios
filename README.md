@@ -21,7 +21,7 @@ Other Countly SDK repositories;
 
 Countly SDK Guides;
 - [Countly Android Messaging Guide](http://resources.count.ly/v1.0/docs/countly-push-for-android)
-- [Countly iOS Messaging Guide](http://resources.count.ly/v1.0/docs/countly-push-for-ios)
+- [Countly iOS Messaging Guide]()http://resources.count.ly/v1.0/docs/countly-push-for-ios
 
 ## This Titanium iOS module is written to take use of all the Count.ly functions - including events,userData and Messaging.
 ## It is written with functions as close to the Android module as possible to create uniformed functions.
@@ -341,3 +341,11 @@ console.log('locale',countly.locale);
 console.log('appVersion',countly.appVersion);
 console.log('osVersion',countly.osVersion);
 ```
+
+## Author
+
+Author: Dieskim
+
+## License
+
+MIT as in License.txt
