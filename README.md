@@ -336,8 +336,8 @@ Countly.userData(args);
 - Fatal Native Exception/Crash - Automatically logged via Count.ly SDK
 - Fatal Javascript Exception/Crash - Automatically logged via Module after one function added (Titanium SDK > 4.1 only)
 - Non-Fatal Javascript Exception/Crash - Manually Logged by user in App code as needed via- Countly.recordHandledException
-** The user can also add entries to Crash logs in app code via - Countly.addCrashLog
-** 4 CrashTest are built in to help test crash reporting
+- The user can also add entries to Crash logs in app code via - Countly.addCrashLog
+- 4 CrashTest are built in to help test crash reporting
 
 
 **Start Crash Reporting - WITH or WITHOUT Segments**
