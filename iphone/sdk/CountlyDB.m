@@ -17,6 +17,30 @@
 #   define COUNTLY_LOG(...)
 #endif
 
+//#   define COUNTLY_APP_GROUP_ID @"group.example.myapp"
+#if COUNTLY_TARGET_WATCHKIT
+#   ifndef COUNTLY_APP_GROUP_ID
+#       error "Application Group Identifier not specified! Please uncomment the line above and specify it."
+#   endif
+#import <WatchKit/WatchKit.h>
+#endif
+
+/*
+Countly iOS SDK WatchKit Support
+================================
+To use Countly iOS SDK in WatchKit apps:
+1) While adding Countly iOS SDK files to the project, make sure you select WatchKit Extension target too.
+   (Or add them manually to WatchKit Extension target's Build Settings > Compile Sources section)
+2) Add "-DCOUNTLY_TARGET_WATCHKIT=1" flag to "Other C Flags" under WatchKit Extension target's Build Settings
+3) For both WatchKit Extension target and Container App target enable App Groups under Capabilities section. 
+   ( For details: http://is.gd/ConfiguringAppGroups )
+4) Uncomment COUNTLY_APP_GROUP_ID line and specify Application Group Identifier there
+5) Inside awakeWithContext:(id)context method of your watch app's main entry point (InterfaceController.m by default), start Countly as usual
+    [[Countly sharedInstance] start:@"YOUR_APP_KEY" withHost:@"https://YOUR_API_HOST.com"];
+6) That's it. You should see a new session on your Dashboard, when you run WatchKit Extension target. 
+   And you can record custom events as usual. 
+*/
+
 @interface CountlyDB()
 @end
 
@@ -56,6 +80,19 @@
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Data" inManagedObjectContext:context];
     
+#ifdef COUNTLY_TARGET_WATCHKIT
+    NSString* watchSegmentationKey = @"[CLY]_apple_watch";
+    NSString* watchModel = (WKInterfaceDevice.currentDevice.screenBounds.size.width == 136.0)?@"38mm":@"42mm";
+    NSString* segmentation = [NSString stringWithFormat:@"{\"%@\":\"%@\"}", watchSegmentationKey, watchModel];
+    NSString* escapedSegmentation = (NSString*)CFBridgingRelease(
+    CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                            (CFStringRef)segmentation,
+                                            NULL,
+                                            (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                            kCFStringEncodingUTF8));
+    postData = [postData stringByAppendingFormat:@"&segment=%@", escapedSegmentation];
+#endif
+
     [newManagedObject setValue:postData forKey:@"post"];
     
     [self saveContext];
@@ -210,8 +247,11 @@
         s_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
         
         NSError *error=nil;
+#ifdef COUNTLY_APP_GROUP_ID
+        NSURL *storeURL = [[NSFileManager.defaultManager containerURLForSecurityApplicationGroupIdentifier:COUNTLY_APP_GROUP_ID] URLByAppendingPathComponent:@"Countly.sqlite"];
+#else
         NSURL *storeURL = [[self applicationSupportDirectory] URLByAppendingPathComponent:@"Countly.sqlite"];
-        
+#endif        
         [s_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];
         if(error)
             COUNTLY_LOG(@"Store opening error %@", error);

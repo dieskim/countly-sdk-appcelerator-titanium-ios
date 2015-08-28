@@ -70,7 +70,6 @@
 	[super didReceiveMemoryWarning:notification];
 }
 
-
 -(void)setMessagingDeveloperMode: (id)args {
     
     [[Countly sharedInstance] setMessagingDeveloperMode];
@@ -145,6 +144,152 @@
     NSString* apikey = [TiUtils stringValue:[args objectAtIndex:0]];
     TiThreadPerformOnMainThread(^{[[Countly sharedInstance] startOnCloudWithAppKey:apikey];}, NO);
 }
+
+#define kCountlyCrashUserInfoKey @"[CLY]_stack_trace"
+
+-(void)startCrashReporting: (id)args {
+    
+    [[Countly sharedInstance] startCrashReporting];
+    
+    NSLog(@"[INFO] %@ startCrashReporting",self);
+    
+}
+
+-(void)startCrashReportingWithSegments: (id)args {
+    
+    NSDictionary* segments = [args objectAtIndex:0];
+    
+    [[Countly sharedInstance] startCrashReportingWithSegments:segments];
+    
+    NSLog(@"[INFO] %@ startCrashReportingWithSegments",self);
+    
+}
+
+-(void)recordUncaughtException: (id)args {
+    
+    // set exceptionDictionary as args
+    NSDictionary* exceptionDictionary = [args objectAtIndex:0];
+    
+    // create and populate errorInfo with exceptionDictionary
+    NSMutableArray *errorInfo = [[[NSMutableArray alloc] init] autorelease];
+    
+    for (NSString* key in exceptionDictionary) {
+       
+        NSString* value = [exceptionDictionary objectForKey:key];
+        NSString* errorString = [NSString stringWithFormat:@"%@ = %@", key, value];
+        
+        [errorInfo addObject:errorString];
+    }
+    
+    // create and pupulate userInfo
+    NSMutableDictionary* userInfo = [[[NSMutableDictionary alloc] init] autorelease];
+    [userInfo setObject:errorInfo forKey:kCountlyCrashUserInfoKey];
+    
+    // set reason
+    NSString *message = [TiUtils stringValue:[exceptionDictionary objectForKey:@"message"]];
+    if (!message) message = [NSString stringWithFormat:@"Error Undefined"];
+    NSString *reason = message;
+   
+    // create and pupulate exception
+    NSException *exception = [NSException exceptionWithName:@"Javascript Fatal Error" reason:reason userInfo:userInfo];
+    
+    // run Countly recordUnhandledException with created exception
+    [[Countly sharedInstance] recordUnhandledException:exception];
+    
+    NSLog(@"[INFO] %@ recordUncaughtException",self);
+
+}
+    
+-(void)recordHandledException: (id)args {
+    
+    // set exceptionDictionary as args
+    NSDictionary* exceptionDictionary = [args objectAtIndex:0];
+    
+    // create and populate errorInfo with exceptionDictionary
+    NSMutableArray *errorInfo = [[[NSMutableArray alloc] init] autorelease];
+    
+    for (NSString* key in exceptionDictionary) {
+        
+        NSString* value = [exceptionDictionary objectForKey:key];
+        NSString* errorString = [NSString stringWithFormat:@"%@ = %@", key, value];
+        
+        [errorInfo addObject:errorString];
+    }
+    
+    // create and pupulate userInfo
+    NSMutableDictionary* userInfo = [[[NSMutableDictionary alloc] init] autorelease];
+    [userInfo setObject:errorInfo forKey:kCountlyCrashUserInfoKey];
+    
+    // set reason
+    NSString *message = [TiUtils stringValue:[exceptionDictionary objectForKey:@"message"]];
+    if (!message) message = [NSString stringWithFormat:@"Error Undefined"];
+    NSString *reason = message;
+    
+    // create and pupulate exception
+    NSException *exception = [NSException exceptionWithName:@"Javascript Non-Fatal Error" reason:reason userInfo:userInfo];
+    
+    // run Countly recordHandledException with created exception
+    [[Countly sharedInstance] recordHandledException:exception];
+   
+    NSLog(@"[INFO] %@ recordHandledException",self);
+    
+}
+
+-(void)addCrashLog: (id)args{
+    
+    // set crashLogDictionary as args
+    NSDictionary* crashLogDictionary = [args objectAtIndex:0];
+
+    // add all entries of crashLogDictionary to string
+    NSMutableString* crashLog = NSMutableString.string;
+    
+    for (NSString* key in crashLogDictionary) {
+        
+        NSString* value = [crashLogDictionary objectForKey:key];
+        NSString* errorString = [NSString stringWithFormat:@"%@ = %@", key, value];
+        [crashLog appendString:errorString];
+        [crashLog appendString:@"\n"];
+        
+    }
+    
+    CountlyCrashLog(@"%@", crashLog);
+    
+    NSLog(@"[INFO] %@ addCrashLog",self);
+    
+}
+
+-(void)crashTest: (id)args {
+    
+    int crashTest = [TiUtils intValue:[args objectAtIndex:0]];
+    
+    if (crashTest == 1){
+        
+        NSLog(@"[INFO] %@ Running crashTest 1",self);
+        
+        [[Countly sharedInstance] crashTest];
+        
+    }else if (crashTest == 2){
+   
+        NSLog(@"[INFO] %@ Running crashTest 2",self);
+        
+        [[Countly sharedInstance] crashTest2];
+        
+    }else if (crashTest == 3){
+        
+        NSLog(@"[INFO] %@ Running crashTest 3",self);
+        
+        [[Countly sharedInstance] crashTest3];
+        
+    }else if (crashTest == 4){
+        
+        NSLog(@"[INFO] %@ Running crashTest 4",self);
+        
+        [[Countly sharedInstance] crashTest4];
+        
+    }
+    
+}
+
 
 -(void)registerDeviceSuccess: (id)args {
     
