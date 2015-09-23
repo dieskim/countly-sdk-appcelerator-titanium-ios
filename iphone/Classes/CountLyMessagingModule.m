@@ -309,7 +309,6 @@
     
     [[Countly sharedInstance] didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
-    
     NSLog(@"deviceTokenModule: %@", deviceToken);
 }
 

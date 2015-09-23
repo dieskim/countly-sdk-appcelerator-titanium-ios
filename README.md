@@ -76,6 +76,9 @@ Countly.startOnCloud('APP_KEY');
 
 **Set Push Setup functions**
 ```
+// START IF - iOS > 8
+if (Ti.Platform.name == "iPhone OS" && parseInt(Ti.Platform.version.split(".")[0]) >= 8) {
+
 // START FUNCTION - registerForPush
 function registerForPush() {
 Ti.Network.registerForPushNotifications({
@@ -92,6 +95,31 @@ Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush);
 
 // addEventListener to Wait for user settings to be registered before registering for push notifications
 Ti.App.iOS.addEventListener('usernotificationsettings', registerForPush);
+
+// Register notification types to use
+Ti.App.iOS.registerUserNotificationSettings({
+types: [
+Ti.App.iOS.USER_NOTIFICATION_TYPE_ALERT,
+Ti.App.iOS.USER_NOTIFICATION_TYPE_SOUND,
+Ti.App.iOS.USER_NOTIFICATION_TYPE_BADGE
+]
+});
+
+} else {  // ELSE for iOS 7 and earlier
+
+Ti.Network.registerForPushNotifications({
+// Specifies which notifications to receive
+types: [
+Ti.Network.NOTIFICATION_TYPE_BADGE,
+Ti.Network.NOTIFICATION_TYPE_ALERT,
+Ti.Network.NOTIFICATION_TYPE_SOUND
+],
+success: deviceTokenSuccess,
+error: deviceTokenError,
+callback: receivePush
+});
+};
+// END IF - iOS > 8	
 
 // Start Function - deviceTokenSuccess
 function deviceTokenSuccess(e) {
@@ -336,8 +364,8 @@ Countly.userData(args);
 - Fatal Native Exception/Crash - Automatically logged via Count.ly SDK
 - Fatal Javascript Exception/Crash - Automatically logged via Module after one function added (Titanium SDK > 4.1 only)
 - Non-Fatal Javascript Exception/Crash - Manually Logged by user in App code as needed via- Countly.recordHandledException
-- The user can also add entries to Crash logs in app code via - Countly.addCrashLog
-- 4 CrashTest are built in to help test crash reporting
+** The user can also add entries to Crash logs in app code via - Countly.addCrashLog
+** 4 CrashTest are built in to help test crash reporting
 
 
 **Start Crash Reporting - WITH or WITHOUT Segments**
