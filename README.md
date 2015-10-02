@@ -42,6 +42,8 @@ https://github.com/dieskim/ly-count-appcelerator
 
 1. Go to: https://github.com/dieskim/countly-sdk-appcelerator-titanium-ios
 2. Download: count.ly-messaging-iphone-x.x.x.zip
+    - RELEASE MODULE = count.ly-messaging-iphone-x.x.x-release.zip
+    - DEBUGGING MODULE = count.ly-messaging-iphone-x.x.x-debug.zip (In case you need to debug something - this module version as Countly Debuggin enabled)
 3. Move Zip to root of your Application 
 4. Build Application - Titanium will automatically extract the module
 
