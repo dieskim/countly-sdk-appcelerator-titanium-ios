@@ -89,7 +89,6 @@ Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush);
 };
 // END FUNCTION - registerForPush
 
-
 // addEventListener to Wait for user settings to be registered before registering for push notifications
 Ti.App.iOS.addEventListener('usernotificationsettings', registerForPush);
 
@@ -98,7 +97,7 @@ function deviceTokenSuccess(e) {
 
 // get Ti.App.Properties - pushSubscribed - to check if already subscribed or not
 var pushSubscribed = Ti.App.Properties.getString('pushSubscribed',false);
-Ti.API.log('pushSubscribed Value: ' + pushSubscribed);	
+Ti.API.log('pushSubscribed Value: ' + pushSubscribed);  
 
 // START IF - not subscribed then subscribe
 if (pushSubscribed != true){
@@ -106,7 +105,7 @@ if (pushSubscribed != true){
 Ti.API.log("Not Subscribed to Count.ly Push - Subscribe with deviceToken: " + e.deviceToken);
 
 // run Count.ly Register Device for Push
-Countly.registerDeviceSuccess(e.deviceToken);
+Countly.registerDeviceSuccess(e.deviceToken);    
 
 // Set Ti.App.Properties push_channels
 Ti.App.Properties.setString('pushSubscribed',true); 
@@ -116,7 +115,7 @@ Ti.App.Properties.setString('pushSubscribed',true);
 Ti.API.log('Already Subscribed to Count.ly Push, wont subscribe again!');
 
 };
-// END IF - not subscribed then subscribe	   
+// END IF - not subscribed then subscribe      
 
 };
 // End Function - deviceTokenSuccess
