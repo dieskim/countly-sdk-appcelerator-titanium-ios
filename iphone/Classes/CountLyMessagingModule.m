@@ -346,13 +346,11 @@
 }
 
 -(void)setLocation: (id)args {
+   
+   double latitude = [TiUtils doubleValue:[args objectAtIndex:0]];
+   double longitude = [TiUtils doubleValue:[args objectAtIndex:1]];
     
-    NSDictionary * params = [args objectAtIndex:0];
-    
-    double latitude = [TiUtils doubleValue:[params objectForKey:@"latitude"]];
-    double longitude = [TiUtils doubleValue:[params objectForKey:@"longitude"]];
-    
-    [[Countly sharedInstance]setLocation:latitude longitude:longitude];
+   [[Countly sharedInstance]setLocation:latitude longitude:longitude];
     
 }
 
@@ -398,6 +396,9 @@
 
 - (void)userData:(id)args
 {
+    
+    // ensure this is run on UI Thread to prevent Threading problems
+    ENSURE_UI_THREAD(userData, args);
     
     //  All keys are optional:
     //  kCLYUserName - (String) User's full name
