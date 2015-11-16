@@ -1745,4 +1745,11 @@ void CCL(const char* function, NSUInteger line, NSString* message)
 }
 #endif
 
+- (NSString *)getDeviceID {
+    
+    NSString *device_udid = [CountlyDeviceInfo udid];
+    return device_udid;
+    
+}
+
 @end

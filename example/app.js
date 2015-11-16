@@ -337,3 +337,7 @@ function runNonFatalCrashTest(){
 	Countly.recordHandledException(exception);	
 	
 };
+
+// Countly getDeviceID
+var countlyDeviceID = Countly.getDeviceID;
+Ti.API.log("countlyDeviceID: " + countlyDeviceID);

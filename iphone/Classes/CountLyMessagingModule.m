@@ -472,6 +472,22 @@
     [Countly.sharedInstance recordUserDetails: userDetails];
     
 }
+
+- (NSString *)getDeviceID {
+    
+    NSLog(@"[INFO] Countly get DeviceID used");
+    
+    if ([[Countly sharedInstance]getDeviceID]) {
+        
+        NSString* deviceID = [[Countly sharedInstance]getDeviceID];
+        
+        return deviceID;
+    }
+    
+    return @"";
+    
+}
+
 - (id)device
 {
     size_t size;

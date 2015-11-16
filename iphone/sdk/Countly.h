@@ -170,4 +170,9 @@ void CCL(const char* function, NSUInteger line, NSString* message);
 - (void)endBackgroundSessionWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler;
 #endif
 
+/**
+ * Return UDID generated and used by Countly
+ */
+- (NSString *)getDeviceID;
+
 @end
