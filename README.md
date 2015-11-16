@@ -418,9 +418,12 @@ Countly.crashTest(4);
 ```
 
 ### Get Countly Devide ID Used
+
+```
 // Countly getDeviceID
 var countlyDeviceID = Countly.getDeviceID;
 Ti.API.log("countlyDeviceID: " + countlyDeviceID);
+```
 
 
 ## Author
