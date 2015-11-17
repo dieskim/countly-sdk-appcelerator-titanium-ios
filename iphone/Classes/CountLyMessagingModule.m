@@ -473,15 +473,15 @@
     
 }
 
-- (NSString *)getDeviceID {
+- (NSString *)getOUDID {
     
-    NSLog(@"[INFO] Countly get DeviceID used");
+    NSLog(@"[INFO] Countly getOUDID");
     
-    if ([[Countly sharedInstance]getDeviceID]) {
+    if ([[Countly sharedInstance]getOUDID]) {
         
-        NSString* deviceID = [[Countly sharedInstance]getDeviceID];
+        NSString* OUDID = [[Countly sharedInstance]getOUDID];
         
-        return deviceID;
+        return OUDID;
     }
     
     return @"";

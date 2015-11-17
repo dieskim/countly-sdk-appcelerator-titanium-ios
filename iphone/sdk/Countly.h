@@ -171,8 +171,8 @@ void CCL(const char* function, NSUInteger line, NSString* message);
 #endif
 
 /**
- * Return UDID generated and used by Countly
+ * Return OUDID generated and used by Countly
  */
-- (NSString *)getDeviceID;
+- (NSString *)getOUDID;
 
 @end
