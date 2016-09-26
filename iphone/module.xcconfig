@@ -1,1 +1,1 @@
-OTHER_LDFLAGS=$(inherited) -framework CoreTelephony -framework CoreData -framework Foundation -framework UIKit
+OTHER_LDFLAGS=$(inherited) -framework WatchConnectivity -framework AdSupport -framework CoreData  -framework CoreTelephony -framework Foundation -framework CoreGraphics -framework UIKit

@@ -47,7 +47,6 @@ https://github.com/dieskim/ly-count-appcelerator
 3. Move Zip to root of your Application 
 4. Build Application - Titanium will automatically extract the module
 
-
 ### Register your module with your application by editing `tiapp.xml` and adding your module.
 
 ```
